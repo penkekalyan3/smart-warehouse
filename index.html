@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartFulfill – Smart Warehouse Operations</title>
+    <!-- Tailwind CSS is not allowed, using Vanilla CSS in style.css -->
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-boxes-packing logo-icon"></i>
+                <div>
+                    <h2>SmartFulfill</h2>
+                    <span class="system-status">🟢 Warehouse System Online</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active" data-target="dashboard">
+                        <i class="fa-solid fa-chart-line"></i><span>Dashboard</span>
+                    </li>
+                    <li class="nav-item" data-target="inventory">
+                        <i class="fa-solid fa-cubes"></i><span>Smart Inventory</span>
+                    </li>
+                    <li class="nav-item" data-target="orders">
+                        <i class="fa-solid fa-cart-shopping"></i><span>Order Management</span>
+                    </li>
+                    <li class="nav-item" data-target="transactions">
+                        <i class="fa-solid fa-credit-card"></i><span>Order Transactions</span>
+                    </li>
+                    <li class="nav-item" data-target="returns">
+                        <i class="fa-solid fa-rotate-left"></i><span>Return Management</span>
+                    </li>
+                    <li class="nav-item" data-target="allocation">
+                        <i class="fa-solid fa-brain"></i><span>Smart Allocation</span>
+                    </li>
+                    <li class="nav-item" data-target="picking">
+                        <i class="fa-solid fa-person-shelves"></i><span>Picking Workflow</span>
+                    </li>
+                    <li class="nav-item" data-target="packing">
+                        <i class="fa-solid fa-box-open"></i><span>Packing Workflow</span>
+                    </li>
+                    <li class="nav-item" data-target="quality">
+                        <i class="fa-solid fa-clipboard-check"></i><span>Quality Check</span>
+                    </li>
+                    <li class="nav-item" data-target="exceptions">
+                        <i class="fa-solid fa-triangle-exclamation"></i><span>Exception Management</span>
+                    </li>
+                    <li class="nav-item" data-target="backorders">
+                        <i class="fa-solid fa-hourglass-half"></i><span>Backorder Management</span>
+                    </li>
+                    <li class="nav-item" data-target="timeline">
+                        <i class="fa-solid fa-truck-ramp-box"></i><span>Dispatch & Timeline</span>
+                    </li>
+                    <li class="nav-item" data-target="analytics">
+                        <i class="fa-solid fa-chart-pie"></i><span>Analytics & Insights</span>
+                    </li>
+                    <li class="nav-item" data-target="demo-mode">
+                        <i class="fa-solid fa-rocket"></i><span>Hackathon Demo Mode</span>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <p>System Version: 2.0.0</p>
+                <p class="current-time-sidebar" id="sidebar-time"></p>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+            <!-- TOP HEADER -->
+            <header class="main-header">
+                <div class="header-title">
+                    <h1>SmartFulfill</h1>
+                    <p class="header-subtitle">Intelligent Smart Warehouse Operations & Financial Intelligence Platform</p>
+                </div>
+                <div class="header-actions">
+                    <div class="time-display">
+                        <i class="fa-regular fa-clock"></i>
+                        <span id="header-timestamp">Aug 18, 2026 14:50:00 PM</span>
+                    </div>
+                    <div class="user-profile">
+                        <i class="fa-solid fa-user-circle"></i>
+                        <span>Supervisor (penkekalyan3)</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- ========================================== -->
+                <!-- 1. DASHBOARD -->
+                <!-- ========================================== -->
+                <section id="dashboard-section" class="content-section active-section">
+                    <div class="dashboard-grid">
+                        <!-- Key Stats -->
+                        <div class="stat-card">
+                            <div class="stat-icon bg-blue"><i class="fa-solid fa-box"></i></div>
+                            <div class="stat-info">
+                                <h3>Total Products</h3>
+                                <p id="db-total-products">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-green"><i class="fa-solid fa-boxes-stacked"></i></div>
+                            <div class="stat-info">
+                                <h3>Available Stock Units</h3>
+                                <p id="db-available-stock">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-yellow"><i class="fa-solid fa-circle-exclamation"></i></div>
+                            <div class="stat-info">
+                                <h3>Low Stock Items</h3>
+                                <p id="db-low-stock">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                            <div class="stat-info">
+                                <h3>Out of Stock</h3>
+                                <p id="db-out-stock">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-blue"><i class="fa-solid fa-cart-shopping"></i></div>
+                            <div class="stat-info">
+                                <h3>Total Orders</h3>
+                                <p id="db-total-orders">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-yellow"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                            <div class="stat-info">
+                                <h3>Pending Orders</h3>
+                                <p id="db-pending-orders">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-red"><i class="fa-solid fa-bolt"></i></div>
+                            <div class="stat-info">
+                                <h3>Critical Orders</h3>
+                                <p id="db-critical-orders">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-blue"><i class="fa-solid fa-dolly"></i></div>
+                            <div class="stat-info">
+                                <h3>Orders in Picking</h3>
+                                <p id="db-picking-orders">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-green"><i class="fa-solid fa-cube"></i></div>
+                            <div class="stat-info">
+                                <h3>Packed Orders</h3>
+                                <p id="db-packed-orders">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-green"><i class="fa-solid fa-truck"></i></div>
+                            <div class="stat-info">
+                                <h3>Dispatched Orders</h3>
+                                <p id="db-dispatched-orders">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-red"><i class="fa-solid fa-circle-xmark"></i></div>
+                            <div class="stat-info">
+                                <h3>Open Exceptions</h3>
+                                <p id="db-open-exceptions">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-yellow"><i class="fa-solid fa-hourglass-half"></i></div>
+                            <div class="stat-info">
+                                <h3>Open Backorders</h3>
+                                <p id="db-open-backorders">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Cards Grid -->
+                    <div class="financials-header">
+                        <h2><i class="fa-solid fa-indian-rupee-sign"></i> Financial Intelligence Dashboard</h2>
+                    </div>
+                    <div class="financial-grid">
+                        <div class="stat-card fin-card">
+                            <div class="stat-info">
+                                <h3>Total Inventory Value</h3>
+                                <p class="fin-value" id="db-total-inv-val">₹0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card fin-card">
+                            <div class="stat-info">
+                                <h3>Potential Sales Value</h3>
+                                <p class="fin-value" id="db-potential-sales-val">₹0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card fin-card">
+                            <div class="stat-info">
+                                <h3>Potential Profit</h3>
+                                <p class="fin-value" id="db-potential-profit">₹0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card fin-card">
+                            <div class="stat-info">
+                                <h3>Total Order Value</h3>
+                                <p class="fin-value" id="db-total-order-val">₹0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card fin-card warning">
+                            <div class="stat-info">
+                                <h3>Revenue at Risk</h3>
+                                <p class="fin-value" id="db-revenue-risk">₹0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card fin-card danger">
+                            <div class="stat-info">
+                                <h3>Profit at Risk</h3>
+                                <p class="fin-value" id="db-profit-risk">₹0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="charts-dashboard-container">
+                        <!-- Dashboard Widgets -->
+                        <div class="dashboard-widget-col">
+                            <div class="widget-card">
+                                <h3>Warehouse Risk Assessment</h3>
+                                <div class="risk-gauge-container">
+                                    <div class="risk-badge" id="db-risk-badge">LOW</div>
+                                    <p class="risk-description">Current risk score based on inventory exceptions and backlog.</p>
+                                </div>
+                                <div class="risk-bar-bg">
+                                    <div class="risk-bar-fill" id="db-risk-fill" style="width: 15%;"></div>
+                                </div>
+                                <div class="risk-score-text" id="db-risk-score">Warehouse Risk Score: 15/100</div>
+                            </div>
+                            <div class="widget-card alerts-widget">
+                                <h3>Real-Time System Alerts</h3>
+                                <div class="alerts-list" id="db-alerts-list">
+                                    <!-- Dynamic alerts -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-charts-grid">
+                            <div class="widget-card chart-wrapper">
+                                <h3>Order Status Distribution</h3>
+                                <canvas id="chart-order-status" height="200"></canvas>
+                            </div>
+                            <div class="widget-card chart-wrapper">
+                                <h3>Order Priority Distribution</h3>
+                                <canvas id="chart-order-priority" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- 2. SMART INVENTORY -->
+                <!-- ========================================== -->
+                <section id="inventory-section" class="content-section">
+                    <div class="section-header">
+                        <h2>Smart Inventory Directory</h2>
+                        <div class="header-buttons">
+                            <button class="btn btn-primary" onclick="openInventoryModal('stock-in')"><i class="fa-solid fa-plus"></i> Stock In</button>
+                            <button class="btn btn-secondary" onclick="openInventoryModal('stock-out')"><i class="fa-solid fa-minus"></i> Stock Out</button>
+                            <button class="btn btn-secondary" onclick="openInventoryModal('stock-adjust')"><i class="fa-solid fa-sliders"></i> Stock Adjustment</button>
+                            <button class="btn btn-danger" onclick="openInventoryModal('mark-damaged')"><i class="fa-solid fa-heart-crack"></i> Mark Damaged</button>
+                        </div>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="filter-panel">
+                        <div class="filter-group search-group">
+                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            <input type="text" id="inv-search" placeholder="Search by code or product name..." onkeyup="filterInventoryTable()">
+                        </div>
+                        <div class="filter-group">
+                            <label for="inv-filter-category">Category</label>
+                            <select id="inv-filter-category" onchange="filterInventoryTable()">
+                                <option value="ALL">All Categories</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="inv-filter-location">Location Zone</label>
+                            <select id="inv-filter-location" onchange="filterInventoryTable()">
+                                <option value="ALL">All Zones</option>
+                                <option value="A">Zone A</option>
+                                <option value="B">Zone B</option>
+                                <option value="C">Zone C</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="inv-filter-status">Stock Status</label>
+                            <select id="inv-filter-status" onchange="filterInventoryTable()">
+                                <option value="ALL">All Statuses</option>
+                                <option value="HEALTHY">Healthy</option>
+                                <option value="LOW STOCK">Low Stock</option>
+                                <option value="OUT OF STOCK">Out of Stock</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Inventory Table -->
+                    <div class="table-container">
+                        <table class="data-table" id="inv-table">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Location</th>
+                                    <th>Total Stock</th>
+                                    <th>Reserved</th>
+                                    <th>Damaged</th>
+                                    <th>Available</th>
+                                    <th>Reorder Lvl</th>
+                                    <th>Unit Cost</th>
+                                    <th>Selling Price</th>
+                                    <th>Inv Value</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inv-table-body">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Recommendations & History -->
+                    <div class="inventory-bottom-grid">
+                        <div class="widget-card">
+                            <h3>🧠 Smart Reorder Recommendations</h3>
+                            <div class="recommendations-container" id="reorder-recommendations-list">
+                                <!-- Recommendations -->
+                            </div>
+                        </div>
+
+                        <div class="widget-card">
+                            <h3>📜 Stock Transaction Ledger</h3>
+                            <div class="table-container compact">
+                                <table class="data-table compact-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Product</th>
+                                            <th>Qty</th>
+                                            <th>Prev -> New</th>
+                                            <th>Ref/Reason</th>
+                                            <th>By</th>
+                                            <th>Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="inv-ledger-body">
+                                        <!-- Dynamic transactions -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- 3. ORDER MANAGEMENT -->
+                <!-- ========================================== -->
+                <section id="orders-section" class="content-section">
+                    <div class="order-grid-container">
+                        <!-- Create Order Form -->
+                        <div class="widget-card order-form-card">
+                            <h3><i class="fa-solid fa-file-invoice-dollar"></i> Generate New Sales Order</h3>
+                            <form id="create-order-form">
+                                <div class="form-group">
+                                    <label for="ord-customer">Customer / Corporate Account</label>
+                                    <input type="text" id="ord-customer" placeholder="e.g. Acme Corp" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ord-product">Product to Fulfill</label>
+                                    <select id="ord-product" onchange="updateOrderPreview()" required>
+                                        <!-- Dynamic selection -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ord-qty">Quantity Needed</label>
+                                    <input type="number" id="ord-qty" value="1" min="1" onchange="updateOrderPreview()" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ord-urgency">Customer Urgency Rating (1 - 10)</label>
+                                    <input type="range" id="ord-urgency" min="1" max="10" value="5" oninput="updateOrderPreview()">
+                                    <span class="range-value" id="ord-urgency-val">5</span>
+                                </div>
+
+                                <!-- Live Financial and Priority Score Engine Preview -->
+                                <div class="order-preview-panel">
+                                    <h4>🧠 Intelligent Decision Engine Preview</h4>
+                                    <div class="preview-grid">
+                                        <div>Available Stock: <span id="pre-avail-stock" class="highlight">0</span></div>
+                                        <div>Shortage Count: <span id="pre-shortage" class="highlight">0</span></div>
+                                        <div>Selling Price: <span id="pre-price">₹0</span></div>
+                                        <div>Order Subtotal: <span id="pre-value" class="highlight">₹0</span></div>
+                                        <div>Estimated Profit: <span id="pre-profit" class="highlight">₹0</span></div>
+                                        <div class="priority-box-preview">
+                                            Priority Score: <strong id="pre-priority-score">0</strong>/100<br>
+                                            Classification: <strong id="pre-priority-level" class="badge bg-yellow">Medium</strong>
+                                        </div>
+                                    </div>
+                                    <p class="preview-engine-explanation" id="pre-explanation">Enter order requirements to run priority algorithms.</p>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-block"><i class="fa-solid fa-paper-plane"></i> Initialize Order</button>
+                            </form>
+                        </div>
+
+                        <!-- Order Tracking Board -->
+                        <div class="widget-card order-board-card">
+                            <h3>📋 Order Dispatch & Status Board</h3>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Order Code</th>
+                                            <th>Customer</th>
+                                            <th>Product</th>
+                                            <th>Qty</th>
+                                            <th>Priority Score</th>
+                                            <th>Est. Profit</th>
+                                            <th>Order Value</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="orders-board-body">
+                                        <!-- Dynamic order rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- 4. ORDER TRANSACTIONS -->
+                <!-- ========================================== -->
+                <section id="transactions-section" class="content-section">
+                    <div class="section-header">
+                        <h2>Order Transactions & Accounts Receivable</h2>
+                    </div>
+
+                    <!-- AR Cards -->
+                    <div class="ar-cards-grid">
+                        <div class="stat-card fin-card">
+                            <div class="stat-info">
+                                <h3>Total Invoiced Sales</h3>
+                                <p class="fin-value" id="ar-total-sales">₹0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card fin-card success">
+                            <div class="stat-info">
+                                <h3>Paid Ledger Value</h3>
+                                <p class="fin-value" id="ar-paid-amount">₹0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card fin-card warning">
+                            <div class="stat-info">
+                                <h3>Accounts Receivable (Pending Payments)</h3>
+                                <p class="fin-value" id="ar-pending-amount">₹0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="widget-card mt-20">
+                        <h3>Ledger & Invoices</h3>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ref / Invoice</th>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Quantity</th>
+                                        <th>Subtotal</th>
+                                        <th>Tax (18%)</th>
+                                        <th>Shipping</th>
+                                        <th>Grand Total</th>
+                                        <th>Method</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactions-ledger-body">
+                                    <!-- Dynamic transaction lines -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- 5. RETURN MANAGEMENT -->
+                <!-- ========================================== -->
+                <section id="returns-section" class="content-section">
+                    <div class="return-grid-container">
+                        <!-- Create Return Request Form -->
+                        <div class="widget-card return-form-card">
+                            <h3><i class="fa-solid fa-rotate-left"></i> Initiate Return Merchandise Authorization (RMA)</h3>
+                            <form id="create-return-form">
+                                <div class="form-group">
+                                    <label for="ret-order-select">Associated Order ID</label>
+                                    <select id="ret-order-select" onchange="updateReturnPreview()" required>
+                                        <!-- Dynamic selection of eligible completed/dispatched/picked orders -->
+                                    </select>
+                                </div>
+                                <div class="form-preview-small" id="ret-order-preview">
+                                    Select an order to view customer and details.
+                                </div>
+                                <div class="form-group">
+                                    <label for="ret-qty">Quantity to Return</label>
+                                    <input type="number" id="ret-qty" min="1" value="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ret-reason">Primary Return Reason</label>
+                                    <select id="ret-reason" required>
+                                        <option value="Damaged Product">Damaged Product</option>
+                                        <option value="Wrong Product">Wrong Product</option>
+                                        <option value="Defective Product">Defective Product</option>
+                                        <option value="Customer Changed Mind">Customer Changed Mind</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ret-desc">Inspector / Remarks Description</label>
+                                    <textarea id="ret-desc" placeholder="Describe defects, damages, or notes..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block"><i class="fa-solid fa-paper-plane"></i> File RMA Request</button>
+                            </form>
+                        </div>
+
+                        <!-- Return Management Directory -->
+                        <div class="widget-card return-board-card">
+                            <h3>📋 Return Inventory & RMA Board</h3>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>RMA ID</th>
+                                            <th>Order ID</th>
+                                            <th>Customer</th>
+                                            <th>Product</th>
+                                            <th>Qty</th>
+                                            <th>Reason</th>
+                                            <th>Condition</th>
+                                            <th>Refund</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="returns-board-body">
+                                        <!-- Dynamic RMA records -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- 6. SMART ALLOCATION -->
+                <!-- ========================================== -->
+                <section id="allocation-section" class="content-section">
+                    <div class="section-header">
+                        <h2>Smart Inventory Allocation Queue</h2>
+                    </div>
+                    <div class="widget-card">
+                        <h3>Orders Awaiting Warehouse Allocation</h3>
+                        <p class="info-help-text">Allocation checks priority values, stock counts, and determines partial fulfillment rules based on operational guidelines.</p>
+                        <div class="table-container mt-20">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Product</th>
+                                        <th>Required</th>
+                                        <th>Available</th>
+                                        <th>Allocation Recommendation</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allocation-queue-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- 7. PICKING WORKFLOW -->
+                <!-- ========================================== -->
+                <section id="picking-section" class="content-section">
+                    <div class="section-header">
+                        <h2>Picking Operations & Route Optimization</h2>
+                    </div>
+
+                    <div class="picking-layout-grid">
+                        <div class="widget-card">
+                            <h3>Active Picking Tasks</h3>
+                            <div class="table-container mt-20">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Task ID</th>
+                                            <th>Order ID</th>
+                                            <th>Product</th>
+                                            <th>Aisle Location</th>
+                                            <th>Qty to Pick</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="picking-tasks-body">
+                                        <!-- Dynamic picking rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Route optimizer demonstration -->
+                        <div class="widget-card route-optimizer-card">
+                            <h3>🧠 Smart Route Optimization Engine</h3>
+                            <p class="description">Alphabetical location grouping (Manhattan Routing) results in immediate transit travel savings.</p>
+                            
+                            <div class="optimization-metrics-card">
+                                <div class="opt-metric">
+                                    <span class="label">Standard Route Distance</span>
+                                    <span class="value" id="opt-std-dist">0 units</span>
+                                </div>
+                                <div class="opt-metric success">
+                                    <span class="label">Optimized Route Distance</span>
+                                    <span class="value" id="opt-opt-dist">0 units</span>
+                                </div>
+                                <div class="opt-metric highlight">
+                                    <span class="label">Total Travel Savings</span>
+                                    <span class="value" id="opt-savings">0%</span>
+                                </div>
+                            </div>
+
+                            <div class="route-visualization-box">
+                                <h4>Optimal Warehouse Pick Sequence:</h4>
+                                <div class="sequence-nodes" id="opt-sequence-list">
+                                    <!-- Dynamic nodes -->
+                                    <span class="node">Start (Dock)</span>
+                                    <span class="arrow"><i class="fa-solid fa-arrow-right"></i></span>
+                                    <span class="node finish">Finish</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- 8. PACKING WORKFLOW -->
+                <!-- ========================================== -->
+                <section id="packing-section" class="content-section">
+                    <div class="section-header">
+                        <h2>Packing & Shipping Containers</h2>
+                    </div>
+                    <div class="widget-card">
+                        <h3>Active Packing Queue</h3>
+                        <div class="table-container mt-20">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Product</th>
+                                        <th>Qty</th>
+                                        <th>Status</th>
+                                        <th>Packaging Type</th>
+                                        <th>Material Cost</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="packing-queue-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- 9. QUALITY CHECK -->
+                <!-- ========================================== -->
+                <section id="quality-section" class="content-section">
+                    <div class="section-header">
+                        <h2>Quality Control Verification</h2>
+                    </div>
+                    <div class="widget-card">
+                        <h3>Order Quality Inspection Queue</h3>
+                        <div class="table-container mt-20">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Product</th>
+                                        <th>Qty Picked</th>
+                                        <th>Location Reference</th>
+                                        <th>Quality Checked By</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="quality-queue-body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- 10. EXCEPTION MANAGEMENT -->
+                <!-- ========================================== -->
+                <section id="exceptions-section" class="content-section">
+                    <div class="section-header">
+                        <h2>System Exceptions Log & Resolutions</h2>
+                    </div>
+                    <div class="widget-card">
+                        <h3>Active Operational Exceptions</h3>
+                        <div class="table-container mt-20">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Exception ID</th>
+                                        <th>Order ID</th>
+                                        <th>Category Type</th>
+                                        <th>Discrepancy Details</th>
+                                        <th>AI Recommended Resolution</th>
+                                        <th>Created At</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="exceptions-ledger-body">
+                                    <!-- Dynamic exceptions -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- 11. BACKORDER MANAGEMENT -->
+                <!-- ========================================== -->
+                <section id="backorders-section" class="content-section">
+                    <div class="section-header">
+                        <h2>Backorder Queue Management</h2>
+                    </div>
+                    <div class="widget-card">
+                        <h3>Unfulfilled Shortage Orders</h3>
+                        <p class="description">These orders are currently waiting for incoming inventory. Once stock is received, they can be fulfilled manually.</p>
+                        <div class="table-container mt-20">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Backorder ID</th>
+                                        <th>Order ID</th>
+                                        <th>Product Code</th>
+                                        <th>Qty Awaiting Fulfill</th>
+                                        <th>Available Stock</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="backorders-ledger-body">
+                                    <!-- Dynamic backorders -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- 12. DISPATCH & TIMELINE -->
+                <!-- ========================================== -->
+                <section id="timeline-section" class="content-section">
+                    <div class="section-header">
+                        <h2>Order Timeline & Live Carrier Progress</h2>
+                    </div>
+                    <div class="timeline-lookup-container widget-card">
+                        <h3>Trace Order Flow</h3>
+                        <div class="form-group row-group">
+                            <label for="timeline-order-id">Select Order ID to Inspect:</label>
+                            <select id="timeline-order-id" onchange="renderOrderTimeline()">
+                                <!-- Dynamic selection of orders -->
+                            </select>
+                        </div>
+
+                        <!-- Progress Bar & Timeline Stages -->
+                        <div class="order-trace-results" id="trace-results-box">
+                            <div class="order-meta-info">
+                                <div><strong>Customer:</strong> <span id="trace-customer">N/A</span></div>
+                                <div><strong>Product:</strong> <span id="trace-product">N/A</span></div>
+                                <div><strong>Total Value:</strong> <span id="trace-value">₹0</span></div>
+                                <div><strong>Current status:</strong> <span id="trace-status" class="badge">Pending</span></div>
+                            </div>
+
+                            <div class="timeline-progress-bar-container">
+                                <div class="timeline-progress-label">Fulfillment Completion: <span id="trace-pct">0%</span></div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" id="trace-progress-fill" style="width: 0%;"></div>
+                                </div>
+                            </div>
+
+                            <!-- 8 Stage Timeline -->
+                            <div class="timeline-stepper">
+                                <div class="step-node" id="step-1">
+                                    <div class="step-circle">1</div>
+                                    <div class="step-label">Order Created</div>
+                                </div>
+                                <div class="step-node" id="step-2">
+                                    <div class="step-circle">2</div>
+                                    <div class="step-label">Allocated</div>
+                                </div>
+                                <div class="step-node" id="step-3">
+                                    <div class="step-circle">3</div>
+                                    <div class="step-label">Picking</div>
+                                </div>
+                                <div class="step-node" id="step-4">
+                                    <div class="step-circle">4</div>
+                                    <div class="step-label">Packing</div>
+                                </div>
+                                <div class="step-node" id="step-5">
+                                    <div class="step-circle">5</div>
+                                    <div class="step-label">Quality Check</div>
+                                </div>
+                                <div class="step-node" id="step-6">
+                                    <div class="step-circle">6</div>
+                                    <div class="step-label">Ready Dispatch</div>
+                                </div>
+                                <div class="step-node" id="step-7">
+                                    <div class="step-circle">7</div>
+                                    <div class="step-label">Dispatched</div>
+                                </div>
+                                <div class="step-node" id="step-8">
+                                    <div class="step-circle">8</div>
+                                    <div class="step-label">Completed</div>
+                                </div>
+                            </div>
+
+                            <!-- Trigger dispatch button if applicable -->
+                            <div class="timeline-actions" id="timeline-actions-panel">
+                                <!-- Trigger buttons dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- 13. ANALYTICS & INSIGHTS -->
+                <!-- ========================================== -->
+                <section id="analytics-section" class="content-section">
+                    <div class="section-header">
+                        <h2>Analytics & Performance KPIs</h2>
+                    </div>
+
+                    <!-- KPI grid -->
+                    <div class="kpi-grid">
+                        <div class="stat-card fin-card">
+                            <div class="stat-info">
+                                <h3>Total Invoiced Revenue</h3>
+                                <p class="fin-value" id="kpi-revenue">₹0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card fin-card success">
+                            <div class="stat-info">
+                                <h3>Net Profit Margin</h3>
+                                <p class="fin-value" id="kpi-profit">₹0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card fin-card danger">
+                            <div class="stat-info">
+                                <h3>Returned Refund Ledger</h3>
+                                <p class="fin-value" id="kpi-refunds">₹0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <h3>Return RMA Rate</h3>
+                                <p id="kpi-return-rate">0%</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <h3>Inventory Turnover</h3>
+                                <p id="kpi-turnover">0.0x</p>
+                            </div>
+                        </div>
+                        <div class="stat-card success">
+                            <div class="stat-info">
+                                <h3>Total Stocks Checked In</h3>
+                                <p id="kpi-stock-in">0 units</p>
+                            </div>
+                        </div>
+                        <div class="stat-card warning">
+                            <div class="stat-info">
+                                <h3>Total Stocks Checked Out</h3>
+                                <p id="kpi-stock-out">0 units</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analytics-charts-grid mt-20">
+                        <div class="widget-card">
+                            <h3>Revenue & Inventory Value by Category</h3>
+                            <canvas id="chart-analytics-categories" height="300"></canvas>
+                        </div>
+                        <div class="widget-card">
+                            <h3>Stock Movements History (In vs Out)</h3>
+                            <canvas id="chart-analytics-movements" height="300"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- 14. HACKATHON DEMO MODE -->
+                <!-- ========================================== -->
+                <section id="demo-mode-section" class="content-section">
+                    <div class="section-header">
+                        <h2>🚀 Hackathon Presentation & Simulation Console</h2>
+                    </div>
+
+                    <div class="demo-console-grid">
+                        <div class="widget-card">
+                            <h3>Simulation Controls</h3>
+                            <p class="description">Simulate warehouse actions to demonstrate dynamic re-calculation and systems integration in real-time during your presentation.</p>
+                            
+                            <div class="demo-buttons-grid mt-20">
+                                <button class="btn btn-primary" onclick="simulateOrder()"><i class="fa-solid fa-cart-plus"></i> Simulate Order Request</button>
+                                <button class="btn btn-success" onclick="simulatePayment()"><i class="fa-solid fa-cash-register"></i> Simulate Order Payment</button>
+                                <button class="btn btn-warning" onclick="simulateReturn()"><i class="fa-solid fa-arrow-rotate-left"></i> Simulate Customer Return</button>
+                                <button class="btn btn-danger" onclick="simulateShortage()"><i class="fa-solid fa-triangle-exclamation"></i> Simulate Stock Shortage</button>
+                                <button class="btn btn-secondary" onclick="simulateDispatch()"><i class="fa-solid fa-truck-fast"></i> Simulate Direct Dispatch</button>
+                            </div>
+
+                            <hr class="separator">
+
+                            <h3>Database Storage Management</h3>
+                            <p class="description">Load default datasets or reset the browser local storage state completely.</p>
+                            <div class="storage-buttons mt-20">
+                                <button class="btn btn-secondary" onclick="loadDefaultDataset()"><i class="fa-solid fa-database"></i> Reload Sample Data</button>
+                                <button class="btn btn-danger" onclick="resetLocalDataset()"><i class="fa-solid fa-trash-can"></i> WIPE & Reset Database</button>
+                            </div>
+                        </div>
+
+                        <div class="widget-card demo-log-card">
+                            <h3>🤖 Live Presentation Log Console</h3>
+                            <p class="description">Live events stream. Updates as database changes happen.</p>
+                            <div class="log-console" id="demo-log-console">
+                                <div class="log-line info">[SYSTEM] Warehouse control panel successfully initialized in localStorage.</div>
+                            </div>
+                            <button class="btn btn-block btn-secondary mt-10" onclick="clearLogConsole()"><i class="fa-solid fa-eraser"></i> Clear Stream</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- OVERLAY OPERATION MODALS -->
+    <!-- ========================================== -->
+    <div class="modal-overlay" id="inventory-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modal-title">Inventory Action</h3>
+                <span class="close-modal" onclick="closeInventoryModal()">&times;</span>
+            </div>
+            <form id="inventory-action-form" onsubmit="submitInventoryAction(event)">
+                <input type="hidden" id="modal-action-type">
+                
+                <div class="form-group">
+                    <label for="modal-product-select">Select Product</label>
+                    <select id="modal-product-select" required>
+                        <!-- Dynamic options -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="modal-qty">Quantity</label>
+                    <input type="number" id="modal-qty" min="1" value="5" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="modal-reason">Reason / Reference (Optional)</label>
+                    <input type="text" id="modal-reason" placeholder="e.g. Supplier Invoice #54 or Monthly count adjustment">
+                </div>
+
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closeInventoryModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="modal-submit-btn">Execute</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Core App Logic -->
+    <script src="script.js"></script>
+</body>
+</html>
